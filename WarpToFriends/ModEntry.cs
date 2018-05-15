@@ -13,17 +13,19 @@ namespace WarpToFriends
 	{
 
 		private IModHelper _helper;
+		private ModConfig config;
 
 		public override void Entry(IModHelper helper)
 		{
 			_helper = helper;
+			config = _helper.ReadConfig<ModConfig>();
 			
 			InputEvents.ButtonPressed += this.InputEvents_ButtonPressed;
 		}
 
 		private void InputEvents_ButtonPressed(object sender, EventArgsInput e)
 		{
-			if (Context.IsWorldReady && e.Button == SButton.J)
+			if (Context.IsWorldReady && e.Button.ToString() == config.OpenMenuKey)
 			{
 				if (!Context.IsPlayerFree)
 				{
