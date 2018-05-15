@@ -1,0 +1,10 @@
+﻿{
+	"Name": "WarpToFriends",
+	"Author": "Jonathan Goodman",
+	"Version": "1.0.0",
+	"Description": "Simple Mod Test",
+	"UniqueID": "JonathanGoodman.WarpToFriends",
+	"EntryDll": "WarpToFriends.dll",
+	"MinimumApiVersion": "2.0",
+	"UpdateKeys": [ "Nexus:2180" ]
+}
