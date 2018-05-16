@@ -109,7 +109,7 @@ namespace WarpToFriends
 
 		private void warpFarmerToPlayer(Farmer f)
 		{
-			if (f.currentLocation.isFarmBuildingInterior() || f.currentLocation.name == "Cabin")
+			if (f.currentLocation.isFarmBuildingInterior() || f.currentLocation.name.Equals("Cabin"))
 			{
 				Game1.warpFarmer(f.currentLocation.uniqueName, (int)(f.position.X + 16) / Game1.tileSize, (int)f.position.Y / Game1.tileSize, false);
 			}
