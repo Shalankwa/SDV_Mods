@@ -1,9 +1,9 @@
 ﻿{
 	"Name": "WarpToFriends",
-	"Author": "Jonathan Goodman",
-	"Version": "1.0.1",
-	"Description": "Simple Mod Test",
-	"UniqueID": "JonathanGoodman.WarpToFriends",
+	"Author": "Shalankwa",
+	"Version": "1.0.2",
+	"Description": "Warp to friend locations",
+	"UniqueID": "Shalankwa.WarpToFriends",
 	"EntryDll": "WarpToFriends.dll",
 	"MinimumApiVersion": "2.0",
 	"UpdateKeys": [ "Nexus:2180" ]

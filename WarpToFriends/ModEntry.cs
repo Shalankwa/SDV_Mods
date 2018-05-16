@@ -21,6 +21,15 @@ namespace WarpToFriends
 			config = _helper.ReadConfig<ModConfig>();
 			
 			InputEvents.ButtonPressed += this.InputEvents_ButtonPressed;
+			PlayerEvents.Warped += this.debugWarp;
+		}
+
+		private void debugWarp(object sender, EventArgsPlayerWarped e)
+		{
+			this.Monitor.Log("Warped to: " + e.NewLocation.uniqueName);
+			this.Monitor.Log("Warped to: " + e.NewLocation.name);
+			this.Monitor.Log("Warped to: " + e.NewLocation.Name);
+
 		}
 
 		private void InputEvents_ButtonPressed(object sender, EventArgsInput e)

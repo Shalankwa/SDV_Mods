@@ -109,7 +109,7 @@ namespace WarpToFriends
 
 		private void warpFarmerToPlayer(Farmer f)
 		{
-			Game1.warpFarmer(f.currentLocation.name, (int)(f.position.X + 16) / Game1.tileSize, (int)f.position.Y / Game1.tileSize, false);
+			Game1.warpFarmer(f.currentLocation.uniqueName, (int)(f.position.X + 16) / Game1.tileSize, (int)f.position.Y / Game1.tileSize, false);
 		}
 	}
 }
