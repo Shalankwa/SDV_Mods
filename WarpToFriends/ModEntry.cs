@@ -5,6 +5,7 @@ using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Menus;
+using WarpToFriends.Helpers;
 
 namespace WarpToFriends
 {
@@ -12,15 +13,16 @@ namespace WarpToFriends
 	public class ModEntry : Mod
 	{
 
-		private IModHelper _helper;
-		private ModConfig config;
+		public static IModHelper Helper { get; private set; }
+		public static IMonitor Monitor { get; private set; }
+		public static ModConfig config;
 
 		public override void Entry(IModHelper helper)
 		{
-			_helper = helper;
-			config = _helper.ReadConfig<ModConfig>();
-			
-			InputEvents.ButtonPressed += this.InputEvents_ButtonPressed;
+			Helper = helper;
+			Monitor = Monitor;
+			config = helper.ReadConfig<ModConfig>();
+			InputEvents.ButtonPressed += InputEvents_ButtonPressed;
 		}
 
 		private void InputEvents_ButtonPressed(object sender, EventArgsInput e)
@@ -36,7 +38,7 @@ namespace WarpToFriends
 				}
 				else
 				{
-					Game1.activeClickableMenu = new WarpMenu(this.Monitor, _helper);
+					Game1.activeClickableMenu = new WarpMenu();
 				}
 				
 			}

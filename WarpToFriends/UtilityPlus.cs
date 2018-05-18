@@ -28,5 +28,15 @@ namespace WarpToFriends
 
 		}
 
+		public static void drawTextBox(SpriteBatch b, Rectangle bounds, Color boxColor, string text, SpriteFont font, Color color)
+		{
+			IClickableMenu.drawTextureBox(b, Game1.mouseCursors, new Rectangle(432, 439, 9, 9),
+				bounds.X, bounds.Y, bounds.Width, bounds.Height, boxColor, 4f, true);
+
+			
+
+		}
+
+
 	}
 }
