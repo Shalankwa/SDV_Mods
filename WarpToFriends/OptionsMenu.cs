@@ -30,7 +30,7 @@ namespace WarpToFriends
 
 		private TOptions _config;
 		private string _property;
-		private readonly string _message = "Press new key...";
+		private readonly string _message = "Press New Key...";
 		private IClickableMenu _returnMenu;
 
 		public OptionsKeyListener(TOptions config, string property, IClickableMenu returnMenu)
@@ -49,7 +49,7 @@ namespace WarpToFriends
 			var yOffset = Game1.smallFont.MeasureString(_message).Y / 2 * scale;
 
 			b.Draw(Game1.fadeToBlackRect, Game1.graphics.GraphicsDevice.Viewport.Bounds, Color.Black * 0.75f);
-			Utility.drawBoldText(b, _message, Game1.smallFont, new Vector2(Game1.viewport.Width / 2 - xOffset, Game1.viewport.Height / 2 - yOffset), Color.White, scale);
+			b.DrawString(Game1.dialogueFont, _message, new Vector2(Game1.viewport.Width / 2 - xOffset, Game1.viewport.Height / 2 - yOffset), Color.White);
 
 		}
 
@@ -85,6 +85,7 @@ namespace WarpToFriends
 		private Rectangle ScrollbarRail;
 		private int CurrentOptionIndex;
 		private int OptionCount;
+		private readonly int OptionsPerPage;
 
 		public OptionsMenu(IModHelper helper, int w, int h, long originPlayerId, TOptions config, IClickableMenu returnMenu = null) 
 			: base((Game1.viewport.Width / 2) - (w / 2), (Game1.viewport.Height / 2) - (h / 2), w, h, true)
@@ -93,6 +94,8 @@ namespace WarpToFriends
 			_originPlayerId = originPlayerId;
 			_config = config;
 			_returnMenu = returnMenu;
+
+			OptionsPerPage = (height - (BorderWidth * 2)) / OptionHeight;
 
 			UpArrow = new ClickableTextureComponent("up-arrow", new Rectangle(xPositionOnScreen + width + 16, yPositionOnScreen, 44, 48), "", "", Game1.mouseCursors, new Rectangle(421, 459, 11, 12), 4f, false);
 			DownArrow = new ClickableTextureComponent("down-arrow", new Rectangle(xPositionOnScreen + width + 16, yPositionOnScreen + height - 48, 44, 48), "", "", Game1.mouseCursors, new Rectangle(421, 472, 11, 12), 4f, false);
@@ -113,7 +116,7 @@ namespace WarpToFriends
 			Checkboxes = new List<ClickableTextureComponent>();
 			SetButtons = new List<ClickableTextureComponent>();
 
-			for (int currOp = CurrentOptionIndex, idx = 0; idx < 4; idx++, currOp++)
+			for (int currOp = CurrentOptionIndex, idx = 0; idx < OptionsPerPage; idx++, currOp++)
 			{
 				var option = options[currOp];
 
@@ -159,8 +162,8 @@ namespace WarpToFriends
 			UpArrow.draw(b);
 			DownArrow.draw(b);
 			IClickableMenu.drawTextureBox(b, Game1.mouseCursors, new Rectangle(403, 383, 6, 6), ScrollbarRail.X, ScrollbarRail.Y, ScrollbarRail.Width, ScrollbarRail.Height, Color.White, 4f, false);
-			Scrollbar.bounds.Y = ScrollbarRail.Height / Math.Max(1, OptionCount - 4 + 1) * CurrentOptionIndex + ScrollbarRail.Y;
-			if(CurrentOptionIndex >= OptionCount - 4) Scrollbar.bounds.Y = ScrollbarRail.Bottom - Scrollbar.bounds.Height;
+			Scrollbar.bounds.Y = ScrollbarRail.Height / Math.Max(1, OptionCount - OptionsPerPage + 1) * CurrentOptionIndex + ScrollbarRail.Y;
+			if(CurrentOptionIndex >= OptionCount - OptionsPerPage) Scrollbar.bounds.Y = ScrollbarRail.Bottom - Scrollbar.bounds.Height;
 			Scrollbar.draw(b);
 		}
 
@@ -255,7 +258,7 @@ namespace WarpToFriends
 			{
 				CurrentOptionIndex--;
 			}
-			else if(direction < 0 && CurrentOptionIndex + 4 < OptionCount)
+			else if(direction < 0 && CurrentOptionIndex + OptionsPerPage < OptionCount)
 			{
 				CurrentOptionIndex++;
 			}

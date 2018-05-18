@@ -117,7 +117,7 @@ namespace WarpToFriends
 			if(_options.containsPoint(x, y))
 			{
 				Game1.activeClickableMenu.exitThisMenuNoSound();
-				Game1.activeClickableMenu = new OptionsMenu<ModConfig>(ModEntry.Helper, 500, 350, Game1.player.uniqueMultiplayerID, ModEntry.config, this);
+				Game1.activeClickableMenu = new OptionsMenu<ModConfig>(ModEntry.Helper, 500, 400, Game1.player.uniqueMultiplayerID, ModEntry.config, this);
 			}
 
 			base.receiveLeftClick(x, y, playSound);
