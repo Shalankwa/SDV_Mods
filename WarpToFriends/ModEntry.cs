@@ -20,7 +20,7 @@ namespace WarpToFriends
 		public override void Entry(IModHelper helper)
 		{
 			Helper = helper;
-			Monitor = Monitor;
+			Monitor = base.Monitor;
 			config = helper.ReadConfig<ModConfig>();
 			InputEvents.ButtonPressed += InputEvents_ButtonPressed;
 		}

@@ -16,6 +16,8 @@ namespace WarpToFriends
 		[OptionDisplay("This is a checkbox")]
 		public bool cb { get; set; } = false;
 
+		[OptionDisplay("Test Slider", 15)]
+		public int TestSlider { get; set; } = 0;
 
 		[OptionDisplay("Test Key")]
 		public string TestKey { get; set; } = Keys.M.ToString();

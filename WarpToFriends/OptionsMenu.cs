@@ -17,10 +17,17 @@ namespace WarpToFriends
 	public class OptionDisplayAttribute : Attribute
 	{
 		public string Name { get; }
+		public int MaxValue { get; } = 10;
 
 		public OptionDisplayAttribute(string name)
 		{
 			Name = name;
+		}
+
+		public OptionDisplayAttribute(string name, int maxValue)
+		{
+			Name = name;
+			MaxValue = maxValue;
 		}
 	}
 
@@ -78,6 +85,7 @@ namespace WarpToFriends
 
 		private List<ClickableTextureComponent> Checkboxes { get; set; }
 		private List<ClickableTextureComponent> SetButtons { get; set; }
+		private List<ClickableTextureComponent> Sliders { get; set; }
 
 		private ClickableTextureComponent Scrollbar;
 		private ClickableTextureComponent UpArrow;
@@ -86,6 +94,9 @@ namespace WarpToFriends
 		private int CurrentOptionIndex;
 		private int OptionCount;
 		private readonly int OptionsPerPage;
+
+		private ClickableTextureComponent SliderHeld;
+		private bool Sliding;
 
 		public OptionsMenu(IModHelper helper, int w, int h, long originPlayerId, TOptions config, IClickableMenu returnMenu = null) 
 			: base((Game1.viewport.Width / 2) - (w / 2), (Game1.viewport.Height / 2) - (h / 2), w, h, true)
@@ -115,6 +126,7 @@ namespace WarpToFriends
 
 			Checkboxes = new List<ClickableTextureComponent>();
 			SetButtons = new List<ClickableTextureComponent>();
+			Sliders = new List<ClickableTextureComponent>();
 
 			for (int currOp = CurrentOptionIndex, idx = 0; idx < OptionsPerPage; idx++, currOp++)
 			{
@@ -126,13 +138,15 @@ namespace WarpToFriends
 
 				var displayName = option.Name;
 
+				var maxValue = 10;
+
 				var optionDisplayAttribute = option.GetCustomAttributes(true).FirstOrDefault(a => (a as OptionDisplayAttribute) != null);
 
 				if (optionDisplayAttribute != null)
 				{
 					displayName = ((OptionDisplayAttribute)optionDisplayAttribute).Name;
+					maxValue = ((OptionDisplayAttribute)optionDisplayAttribute).MaxValue;
 				}
-
 
 				if (optionType == typeof(bool))
 				{
@@ -148,7 +162,11 @@ namespace WarpToFriends
 				}
 				else if (optionType == typeof(int))
 				{
-					// draw a scale bar
+
+					DrawOption(idx, displayName, b, value.ToString());
+
+					DrawSliderOption(idx, (int)value, option.Name, maxValue, b);
+
 				}
 			}
 
@@ -157,35 +175,40 @@ namespace WarpToFriends
 			drawMouse(b);
 		}
 
-		private void drawScrollbar(SpriteBatch b)
-		{
-			UpArrow.draw(b);
-			DownArrow.draw(b);
-			IClickableMenu.drawTextureBox(b, Game1.mouseCursors, new Rectangle(403, 383, 6, 6), ScrollbarRail.X, ScrollbarRail.Y, ScrollbarRail.Width, ScrollbarRail.Height, Color.White, 4f, false);
-			Scrollbar.bounds.Y = ScrollbarRail.Height / Math.Max(1, OptionCount - OptionsPerPage + 1) * CurrentOptionIndex + ScrollbarRail.Y;
-			if(CurrentOptionIndex >= OptionCount - OptionsPerPage) Scrollbar.bounds.Y = ScrollbarRail.Bottom - Scrollbar.bounds.Height;
-			Scrollbar.draw(b);
-		}
-
 		private void DrawOption(int idx, string optionName, SpriteBatch b, string value = null)
 		{
 			var xPos = this.xPositionOnScreen + BorderWidth;
 			var yPos = this.yPositionOnScreen + BorderWidth + (idx * OptionHeight);
 
-
 			IClickableMenu.drawTextureBox(b, Game1.mouseCursors, new Rectangle(384, 396, 15, 15), xPos, yPos, width - (2 * BorderWidth), OptionHeight, Color.White, Game1.pixelZoom, false);
 
 			var textHeight = Game1.smallFont.MeasureString(optionName).Y;
-
 			var textY = yPos + (OptionHeight / 2f) - (textHeight / 2);
 
 			Utility.drawTextWithShadow(b, optionName + ((value != null) ? $" : {value}" : ""), Game1.smallFont, new Vector2(xPos + BorderWidth, textY), Color.Black);
 		}
 
-		private void DrawTextOption(int idx, string value, SpriteBatch b)
+		private void DrawSliderOption(int idx, int value, string propertyName, int maxValue, SpriteBatch b)
 		{
+			var setSliderRailSizeX = 25 * Game1.pixelZoom;
+			var setSliderRailSizeY = 6 * Game1.pixelZoom;
 
+			var xPos = this.xPositionOnScreen + this.width - (2 * BorderWidth) - setSliderRailSizeX;
+			var yPos = this.yPositionOnScreen + BorderWidth + (idx * OptionHeight) + (OptionHeight / 2) - (setSliderRailSizeY / 2);
 
+			var src = new Rectangle(403, 383, 6, 6);
+			IClickableMenu.drawTextureBox(b, Game1.mouseCursors, src, xPos, yPos, setSliderRailSizeX, setSliderRailSizeY, Color.White, Game1.pixelZoom, false);
+
+			var setSliderSizeX = 10 * Game1.pixelZoom;
+			var setSliderSizeY = 6 * Game1.pixelZoom;
+
+			xPos += setSliderRailSizeX / maxValue * value;
+
+			src = new Rectangle(420, 441, 10, 6);
+			var slider = new ClickableTextureComponent(propertyName, new Rectangle(xPos, yPos, setSliderSizeX, setSliderSizeY), "", "", Game1.mouseCursors, src, Game1.pixelZoom, true);
+
+			Sliders.Add(slider);
+			slider.draw(b);
 		}
 
 		private void DrawKeyOption(int idx, string value, string propertyName, SpriteBatch b)
@@ -212,16 +235,23 @@ namespace WarpToFriends
 			var yPos = this.yPositionOnScreen + BorderWidth + (idx * OptionHeight) + (OptionHeight / 2) - (checkboxSize / 2);
 
 			var uncheckedSrc = new Rectangle(227, 425, 9, 9);
-
 			var checkedSrc = new Rectangle(236, 425, 9, 9);
-
 			var src = value ? checkedSrc : uncheckedSrc;
 
 			var checkbox = new ClickableTextureComponent(propertyName, new Rectangle(xPos, yPos, checkboxSize, checkboxSize), "", "", Game1.mouseCursors, src, Game1.pixelZoom, false);
 
 			Checkboxes.Add(checkbox);
-
 			checkbox.draw(b);
+		}
+
+		private void drawScrollbar(SpriteBatch b)
+		{
+			UpArrow.draw(b);
+			DownArrow.draw(b);
+			IClickableMenu.drawTextureBox(b, Game1.mouseCursors, new Rectangle(403, 383, 6, 6), ScrollbarRail.X, ScrollbarRail.Y, ScrollbarRail.Width, ScrollbarRail.Height, Color.White, 4f, false);
+			Scrollbar.bounds.Y = ScrollbarRail.Height / Math.Max(1, OptionCount - OptionsPerPage + 1) * CurrentOptionIndex + ScrollbarRail.Y;
+			if (CurrentOptionIndex >= OptionCount - OptionsPerPage) Scrollbar.bounds.Y = ScrollbarRail.Bottom - Scrollbar.bounds.Height;
+			Scrollbar.draw(b);
 		}
 
 		public override void receiveLeftClick(int x, int y, bool playSound = true)
@@ -240,6 +270,14 @@ namespace WarpToFriends
 					Game1.activeClickableMenu = new OptionsKeyListener<TOptions>(_config, setbutton.name, this);
 				}
 			}
+			foreach (var slider in Sliders)
+			{
+				if (slider.containsPoint(x, y))
+				{
+					SliderHeld = slider;
+					Sliding = true;
+				}
+			}
 
 			if (upperRightCloseButton.containsPoint(x, y))
 			{
@@ -249,7 +287,6 @@ namespace WarpToFriends
 
 				Game1.activeClickableMenu = _returnMenu;
 			}
-
 		}
 
 		public override void receiveScrollWheelAction(int direction)
@@ -262,6 +299,20 @@ namespace WarpToFriends
 			{
 				CurrentOptionIndex++;
 			}
+		}
+
+		public override void leftClickHeld(int x, int y)
+		{
+			if (!Sliding || SliderHeld == null) return;
+
+			setSliderValue(SliderHeld, x, y);
+
+		}
+
+		public override void releaseLeftClick(int x, int y)
+		{
+			SliderHeld = null;
+			Sliding = false;
 		}
 
 		public override void emergencyShutDown()
@@ -284,6 +335,18 @@ namespace WarpToFriends
 			}
 
 		}
-		
+
+		private void setSliderValue(ClickableTextureComponent slider, int x, int y)
+		{
+			var property = _config.GetType().GetProperties().FirstOrDefault(p => p.Name == slider.name);
+
+			if (property == null) return;
+			
+			
+			int value = Math.Min((int)property.GetValue(_config, null), 14);
+			property.SetValue(_config, ++value);
+			
+		}
+
 	}
 }
