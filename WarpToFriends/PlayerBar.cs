@@ -22,11 +22,18 @@ namespace WarpToFriends
 		public PlayerBar(Farmer f)
 		{
 			farmer = f;
-			online = Game1.getOnlineFarmers().Any( o => o == farmer);
+			checkOnline();
+		}
+
+		private void checkOnline()
+		{
+			online = Game1.getOnlineFarmers().Any(o => o == farmer);
 		}
 
 		public void draw(SpriteBatch b)
 		{
+			checkOnline();
+
 			IClickableMenu.drawTextureBox(b, Game1.mouseCursors, new Rectangle(384, 396, 15, 15),
 				section.bounds.X, section.bounds.Y, section.bounds.Width, section.bounds.Height, Color.White, 4f, false);
 
@@ -38,9 +45,9 @@ namespace WarpToFriends
 			Utility.drawTextWithShadow(b, nameT, Game1.smallFont, new Vector2(section.bounds.X + 120, section.bounds.Y + 22), Game1.textColor);
 			Utility.drawTextWithShadow(b, locaT, Game1.smallFont, new Vector2(section.bounds.X + 300, section.bounds.Y + 22), Game1.textColor);
 
-			if (Game1.player == farmer || !online) return;
+			if (Game1.player == farmer) return;
 			Color color = (warpButton.containsPoint(Game1.getMouseX(), Game1.getMouseY())) ? Color.Wheat : Color.White;
-			UtilityPlus.drawButtonWithText(b, warpButton.bounds, color, "Warp", Game1.smallFont, Game1.textColor);
+			UtilityPlus.drawButtonWithText(b, warpButton.bounds, (online)? color : Color.Gray, "Warp", Game1.smallFont, Game1.textColor);
 
 		}
 

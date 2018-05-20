@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StardewValley.BellsAndWhistles;
+using StardewValley.Locations;
 
 namespace WarpToFriends
 {
@@ -17,20 +19,20 @@ namespace WarpToFriends
 	{
 
 		private readonly List<Farmer> _farmers;
-		private static int Width = 700;
-		private static int Height = 400;
 
 		private List<PlayerBar> _playerBars;
-		private ClickableTextureComponent _options;
+		private ClickableTextureComponent _optionsButtom;
 
-		public WarpMenu()
-			: base(Game1.viewport.Width / 2 - Width / 2, Game1.viewport.Height / 2 - Height / 2, Width, Height, true)
+		public WarpMenu(int w = 700, int h = 400)
+			: base(Game1.viewport.Width / 2 - w / 2, Game1.viewport.Height / 2 - h / 2, w, h, true)
 		{
 			_farmers = PlayerHelper.GetAllCreatedFarmers();
+			base.width = w;
+			base.height = h;
 			
 			setUpPlayerBars();
 
-			_options = new ClickableTextureComponent("Options", new Rectangle(xPositionOnScreen + Width, yPositionOnScreen + Height, 16 * Game1.pixelZoom, 16 * Game1.pixelZoom),
+			_optionsButtom = new ClickableTextureComponent("Options", new Rectangle(xPositionOnScreen + width, yPositionOnScreen + height, 16 * Game1.pixelZoom, 16 * Game1.pixelZoom),
 				"", "Configure mod options", Game1.mouseCursors, new Rectangle(162, 440, 16, 16), Game1.pixelZoom);
 		}
 
@@ -43,14 +45,14 @@ namespace WarpToFriends
 			{
 				PlayerBar pb = new PlayerBar(_farmers[i]);
 
-				int posX = xPositionOnScreen;
-				int posY = yPositionOnScreen + ((Height / 4) * i);
+				int xPos = xPositionOnScreen;
+				int yPos = yPositionOnScreen + ((height / 4) * i);
 
-				Rectangle sectionBounds = new Rectangle(posX + 16, posY + 16, Width - 32, Height / 4);
+				Rectangle sectionBounds = new Rectangle(xPos + 16, yPos + 16, width - 32, height / 4);
 				pb.section = new ClickableComponent(sectionBounds, _farmers[i].name);
 
-				int iconStartX = posX + 30;
-				int iconStartY = posY + 20;
+				int iconStartX = xPos + 30;
+				int iconStartY = yPos + 20;
 				pb.icon = new ClickableComponent(new Rectangle(iconStartX, iconStartY, 80, 80), _farmers[i].name);
 
 				Rectangle buttonBounds = new Rectangle(iconStartX + 530, iconStartY + 16, 85, 50);
@@ -63,8 +65,8 @@ namespace WarpToFriends
 
 		public override void draw(SpriteBatch b)
 		{
-			drawMenuTitle(b);
 			drawMenuBackground(b);
+			drawMenuTitle(b);
 			drawPlayerBars(b);
 			drawOptionsButton(b);
 			base.draw(b);
@@ -73,16 +75,16 @@ namespace WarpToFriends
 
 		private void drawMenuTitle(SpriteBatch b)
 		{
-
+			SpriteText.drawStringWithScrollCenteredAt(b, "Warp to Friends", xPositionOnScreen + width / 2, yPositionOnScreen - 72); 
 		}
 
 		private void drawOptionsButton(SpriteBatch b)
 		{
-			_options.draw(b);
-			_options.tryHover(Game1.getMouseX(), Game1.getMouseY());
-			if(_options.containsPoint(Game1.getMouseX(), Game1.getMouseY()))
+			_optionsButtom.draw(b);
+			_optionsButtom.tryHover(Game1.getMouseX(), Game1.getMouseY());
+			if(_optionsButtom.containsPoint(Game1.getMouseX(), Game1.getMouseY()))
 			{
-				IClickableMenu.drawToolTip(b, _options.hoverText, _options.name, null);
+				IClickableMenu.drawToolTip(b, _optionsButtom.hoverText, _optionsButtom.name, null);
 			}
 		}
 
@@ -99,8 +101,7 @@ namespace WarpToFriends
 
 			b.Draw(Game1.fadeToBlackRect, Game1.graphics.GraphicsDevice.Viewport.Bounds, Color.Black * 0.4f);
 
-			IClickableMenu.drawTextureBox(b, Game1.mouseCursors, new Rectangle(384, 373, 18, 18),
-				xPositionOnScreen, yPositionOnScreen, width, height + 32, Color.White, 4f, true);
+			IClickableMenu.drawTextureBox(b, Game1.mouseCursors, new Rectangle(384, 373, 18, 18), xPositionOnScreen, yPositionOnScreen, width, base.height + 32, Color.White, 4f, true);
 
 		}
 
@@ -114,7 +115,7 @@ namespace WarpToFriends
 					warpFarmerToPlayer(pb.farmer);
 				}
 			}
-			if(_options.containsPoint(x, y))
+			if(_optionsButtom.containsPoint(x, y))
 			{
 				Game1.activeClickableMenu.exitThisMenuNoSound();
 				Game1.activeClickableMenu = new OptionsMenu<ModConfig>(ModEntry.Helper, 500, 400, Game1.player.uniqueMultiplayerID, ModEntry.config, this);
@@ -125,15 +126,9 @@ namespace WarpToFriends
 
 		private void warpFarmerToPlayer(Farmer f)
 		{
-			if (f.currentLocation.isFarmBuildingInterior() || f.currentLocation.name.Equals("Cabin"))
-			{
-				Game1.warpFarmer(f.currentLocation.uniqueName, (int)(f.position.X + 16) / Game1.tileSize, (int)f.position.Y / Game1.tileSize, false);
-			}
-			else
-			{
-				Game1.warpFarmer(f.currentLocation.name, (int)(f.position.X + 16) / Game1.tileSize, (int)f.position.Y / Game1.tileSize, false);
-			}
+			var toLocation = (string.IsNullOrEmpty(f.currentLocation.uniqueName)) ? f.currentLocation.name : f.currentLocation.uniqueName;
 
+			Game1.warpFarmer(toLocation, (int)(f.position.X + 16) / Game1.tileSize, (int)f.position.Y / Game1.tileSize, false);
 
 		}
 	}
