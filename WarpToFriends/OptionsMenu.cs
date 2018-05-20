@@ -128,7 +128,7 @@ namespace WarpToFriends
 			SetButtons = new List<ClickableTextureComponent>();
 			Sliders = new List<ClickableTextureComponent>();
 
-			for (int currOp = CurrentOptionIndex, idx = 0; idx < OptionsPerPage; idx++, currOp++)
+			for (int currOp = CurrentOptionIndex, idx = 0; idx < Math.Min(OptionCount, OptionsPerPage); idx++, currOp++)
 			{
 				var option = options[currOp];
 
