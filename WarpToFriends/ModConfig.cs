@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using StardewModdingAPI;
 
 namespace WarpToFriends
 {
@@ -6,7 +6,7 @@ namespace WarpToFriends
 	{
 
 		[OptionDisplay("Open Menu Key")]
-		public string OpenMenuKey { get; set; } = Keys.J.ToString();
+		public SButton OpenMenuKey { get; set; } = SButton.J;
 
 	}
 }

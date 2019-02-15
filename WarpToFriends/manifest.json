@@ -1,10 +1,10 @@
 ﻿{
+	"Name": "Warp To Friends",
 	"Author": "Shalankwa",
-	"Description": "Warp to friend locations",
-	"EntryDll": "WarpToFriends.dll",
-	"MinimumApiVersion": "2.8",
-	"Name": "WarpToFriends",
+	"Version": "1.1.0",
+	"Description": "Warp to friend locations.",
 	"UniqueID": "Shalankwa.WarpToFriends",
-	"UpdateKeys": [ "Nexus:2180" ],
-	"Version": "1.1.0-unofficial.1-ooppss10"
+	"EntryDll": "WarpToFriends.dll",
+	"MinimumApiVersion": "2.10.2",
+	"UpdateKeys": [ "Nexus:2180" ]
 }

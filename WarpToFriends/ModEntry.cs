@@ -12,27 +12,38 @@ namespace WarpToFriends
 		public static IMonitor Monitor { get; private set; }
 		public static ModConfig config;
 
+		/// <summary>The mod entry point, called after the mod is first loaded.</summary>
+		/// <param name="helper">Provides simplified APIs for writing mods.</param>
 		public override void Entry(IModHelper helper)
 		{
 			Helper = helper;
 			Monitor = base.Monitor;
 			config = helper.ReadConfig<ModConfig>();
-			InputEvents.ButtonPressed += InputEvents_ButtonPressed;
+			helper.Events.Input.ButtonPressed += OnButtonPressed;
 
 			// Debug logs
-			//PlayerEvents.Warped += Warped;
+			//helper.Events.Player.Warped += Warped;
 		}
 
-		private void Warped(object sender, EventArgsPlayerWarped e)
+		/// <summary>Raised after a player warps to a new location.</summary>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event data.</param>
+		private void Warped(object sender, WarpedEventArgs e)
 		{
+			if (!e.IsLocalPlayer)
+				return;
+
 			Monitor.Log(e.NewLocation.Name);
 			Monitor.Log(e.NewLocation.uniqueName.Value);
 			Monitor.Log(e.NewLocation.Name);
 		}
 
-		private void InputEvents_ButtonPressed(object sender, EventArgsInput e)
+		/// <summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event data.</param>
+		private void OnButtonPressed(object sender, ButtonPressedEventArgs e)
 		{
-			if (Context.IsWorldReady && e.Button.ToString() == config.OpenMenuKey)
+			if (Context.IsWorldReady && e.Button == config.OpenMenuKey)
 			{
 				if (!Context.IsPlayerFree)
 				{
