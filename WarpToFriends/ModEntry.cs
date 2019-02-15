@@ -1,11 +1,6 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
-using StardewModdingAPI.Utilities;
 using StardewValley;
-using StardewValley.Menus;
-using WarpToFriends.Helpers;
 
 namespace WarpToFriends
 {
@@ -30,8 +25,8 @@ namespace WarpToFriends
 
 		private void Warped(object sender, EventArgsPlayerWarped e)
 		{
-			Monitor.Log(e.NewLocation.name);
-			Monitor.Log(e.NewLocation.uniqueName);
+			Monitor.Log(e.NewLocation.Name);
+			Monitor.Log(e.NewLocation.uniqueName.Value);
 			Monitor.Log(e.NewLocation.Name);
 		}
 
@@ -41,7 +36,7 @@ namespace WarpToFriends
 			{
 				if (!Context.IsPlayerFree)
 				{
-					if(Game1.activeClickableMenu is WarpMenu)
+					if (Game1.activeClickableMenu is WarpMenu)
 					{
 						Game1.activeClickableMenu.exitThisMenu(true);
 					}

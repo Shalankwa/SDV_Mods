@@ -33,9 +33,6 @@
     <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Netcode">
-      <HintPath>E:\games\steamapps\common\Stardew Valley\Mods\WarpToFriends\Netcode.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -57,14 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="manifest.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Netcode.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Netcode.pdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

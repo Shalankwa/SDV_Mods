@@ -1,17 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using StardewModdingAPI;
-using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
 using WarpToFriends.Helpers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using StardewValley.BellsAndWhistles;
-using StardewValley.Locations;
 
 namespace WarpToFriends
 {
@@ -118,7 +111,7 @@ namespace WarpToFriends
 			if(_optionsButtom.containsPoint(x, y))
 			{
 				Game1.activeClickableMenu.exitThisMenuNoSound();
-				Game1.activeClickableMenu = new OptionsMenu<ModConfig>(ModEntry.Helper, 500, 400, Game1.player.uniqueMultiplayerID, ModEntry.config, this);
+				Game1.activeClickableMenu = new OptionsMenu<ModConfig>(ModEntry.Helper, 500, 400, Game1.player.UniqueMultiplayerID, ModEntry.config, this);
 			}
 
 			base.receiveLeftClick(x, y, playSound);
@@ -126,7 +119,7 @@ namespace WarpToFriends
 
 		private void warpFarmerToPlayer(Farmer f)
 		{
-			var toLocation = (string.IsNullOrEmpty(f.currentLocation.uniqueName)) ? f.currentLocation.name : f.currentLocation.uniqueName;
+			var toLocation = (string.IsNullOrEmpty(f.currentLocation.uniqueName.Value)) ? f.currentLocation.Name : f.currentLocation.uniqueName.Value;
 
 			Game1.warpFarmer(toLocation, (int)(f.position.X + 16) / Game1.tileSize, (int)f.position.Y / Game1.tileSize, false);
 
