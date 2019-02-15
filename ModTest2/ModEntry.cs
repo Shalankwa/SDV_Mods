@@ -11,8 +11,8 @@ namespace ModTest2
 	public class ModEntry : Mod
 	{
 		/*********
-        ** Public methods
-        *********/
+		** Public methods
+		*********/
 		/// <summary>The mod entry point, called after the mod is first loaded.</summary>
 		/// <param name="helper">Provides simplified APIs for writing mods.</param>
 		public override void Entry(IModHelper helper)
@@ -21,8 +21,8 @@ namespace ModTest2
 		}
 
 		/*********
-        ** Private methods
-        *********/
+		** Private methods
+		*********/
 		/// <summary>The method invoked when the player presses a controller, keyboard, or mouse button.</summary>
 		/// <param name="sender">The event sender.</param>
 		/// <param name="e">The event data.</param>
