@@ -16,6 +16,8 @@ namespace WarpToFriends
 		public static ModConfig config;
 		public ChatReader chatReader;
 
+		/// <summary>The mod entry point, called after the mod is first loaded.</summary>
+		/// <param name="helper">Provides simplified APIs for writing mods.</param>
 		public override void Entry(IModHelper helper)
 		{
 			Helper = helper;
@@ -68,7 +70,9 @@ namespace WarpToFriends
 			}
 		}
 
-		// Testing
+		/// <summary>Raised after a player warps to a new location.</summary>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event data.</param>
 		private void Warped(object sender, WarpedEventArgs e)
 		{
 			Monitor.Log(e.NewLocation.Name);
@@ -76,10 +80,9 @@ namespace WarpToFriends
 			Monitor.Log(e.NewLocation.Name);
 		}
 
-		/*
-		 * Manages player input event 
-		 * Example: Player inputs open chat button (set by config)
-		 */
+		/// <summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
+		/// <param name="sender">The event sender.</param>
+		/// <param name="e">The event data.</param>
 		private void InputEvents_ButtonPressed(object sender, ButtonPressedEventArgs e)
 		{
 			// Open Warp Menu
