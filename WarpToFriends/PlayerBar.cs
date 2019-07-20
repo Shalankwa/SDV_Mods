@@ -39,8 +39,8 @@ namespace WarpToFriends
 
 			farmer.FarmerRenderer.drawMiniPortrat(b, new Vector2(icon.bounds.X, icon.bounds.Y), 0.5f, 5, 1, farmer);
 
-			string nameT = $"Player:\n{farmer.name}";
-			string locaT = "Location:\n" + ((online) ? farmer.currentLocation.name : "Offline");
+			string nameT = $"Player:\n{farmer.Name}";
+			string locaT = "Location:\n" + ((online) ? farmer.currentLocation.Name : "Offline");
 
 			Utility.drawTextWithShadow(b, nameT, Game1.smallFont, new Vector2(section.bounds.X + 120, section.bounds.Y + 22), Game1.textColor);
 			Utility.drawTextWithShadow(b, locaT, Game1.smallFont, new Vector2(section.bounds.X + 300, section.bounds.Y + 22), Game1.textColor);
