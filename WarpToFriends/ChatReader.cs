@@ -92,7 +92,7 @@ namespace WarpToFriends
 			if (_lastMessage != _chatMessages.Last())
 			{
 				_lastMessage = _chatMessages.Last();
-				string msg = ChatMessage.makeMessagePlaintext(_lastMessage.message);
+				string msg = ChatMessage.makeMessagePlaintext(_lastMessage.message , true);
 
 				NewChatMessageEvent(null, new NewChatMessageEvent(msg));
 
